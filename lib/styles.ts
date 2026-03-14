@@ -1,5 +1,7 @@
 // lib/styles.ts
-export const S = {
+import type { CSSProperties } from "react";
+
+export const S: Record<string, CSSProperties> = {
   h1: {
     fontSize: 22,
     fontWeight: 700,
@@ -105,21 +107,39 @@ export const S = {
     alignItems: "center",
     justifyContent: "center",
   },
+  // th: {
+  //   textAlign: "left",
+  //   padding: "12px 12px",
+  //   fontSize: 11,
+  //   fontWeight: 500,
+  //   color: "#4a4540",
+  //   textTransform: "uppercase",
+  //   letterSpacing: "0.05em",
+  //   borderBottom: "1px solid #1a1a1a",
+  // },
+  // td: {
+  //   padding: "10px 12px",
+  //   fontSize: 13,
+  //   color: "#8a8070",
+  //   borderBottom: "1px solid #1a1a1a",
+  // },
   th: {
-    textAlign: "left",
-    padding: "12px 12px",
+    padding: "10px 14px",
     fontSize: 11,
-    fontWeight: 500,
+    fontWeight: 600,
     color: "#4a4540",
     textTransform: "uppercase",
-    letterSpacing: "0.05em",
+    letterSpacing: "0.08em",
+    textAlign: "left", // ✅ now correctly typed
     borderBottom: "1px solid #1a1a1a",
+    whiteSpace: "nowrap",
   },
   td: {
-    padding: "10px 12px",
+    padding: "13px 14px",
     fontSize: 13,
-    color: "#8a8070",
-    borderBottom: "1px solid #1a1a1a",
+    color: "#c8c0b0",
+    borderBottom: "1px solid #171717",
+    verticalAlign: "middle",
   },
   sidebar: {
     width: 220,

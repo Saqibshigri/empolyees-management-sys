@@ -1,4 +1,3 @@
-// app/employees/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,24 @@ import Badge from "@/app/ui/badge";
 import { useToast } from "@/app/ui/toast";
 import { STATUS_CFG, ROLE_CFG } from "@/constants/page";
 
-const EMPTY_EMP = {
+type FormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone: string;
+  gender: string;
+  city: string;
+  country: string;
+  salary: string | number;
+  status: string;
+  departmentId: string;
+  designation: string;
+  role: string;
+  hireDate: string;
+};
+
+const EMPTY_EMP: FormData = {
   firstName: "",
   lastName: "",
   email: "",
@@ -29,9 +45,13 @@ const EMPTY_EMP = {
 };
 
 const EmployeeForm = ({ emp, departments, onSave, onClose }: any) => {
-  const [form, setForm] = useState(emp ? { ...emp, password: "" } : EMPTY_EMP);
+  const [form, setForm] = useState<FormData>(
+    emp ? { ...emp, password: "" } : EMPTY_EMP,
+  );
   const [err, setErr] = useState("");
-  const set = (k: string, v: any) => setForm((f) => ({ ...f, [k]: v }));
+
+  const set = (k: keyof FormData, v: string) =>
+    setForm((f: FormData) => ({ ...f, [k]: v }));
 
   const save = () => {
     if (
@@ -109,7 +129,7 @@ const EmployeeForm = ({ emp, departments, onSave, onClose }: any) => {
         <Input
           label='Annual Salary ($)'
           type='number'
-          value={form.salary}
+          value={form.salary as string}
           onChange={(e) => set("salary", e.target.value)}
           placeholder='75000'
         />
@@ -188,6 +208,7 @@ const EmployeeForm = ({ emp, departments, onSave, onClose }: any) => {
 const EmployeesPage = () => {
   const router = useRouter();
   const { addToast } = useToast();
+
   const [user, setUser] = useState<any>(null);
   const [employees, setEmployees] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
@@ -195,7 +216,7 @@ const EmployeesPage = () => {
   const [statusF, setStatusF] = useState("");
   const [deptF, setDeptF] = useState("");
   const [page, setPage] = useState(1);
-  const [modal, setModal] = useState<any>(null); // null | "add" | employee object
+  const [modal, setModal] = useState<any>(null);
   const [viewEmp, setViewEmp] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -241,6 +262,7 @@ const EmployeesPage = () => {
     const matchD = !deptF || e.departmentId === deptF;
     return matchQ && matchS && matchD;
   });
+
   const pages = Math.ceil(filtered.length / PER_PAGE);
   const shown = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
@@ -408,7 +430,7 @@ const EmployeesPage = () => {
                     colSpan={7}
                     style={{
                       ...S.td,
-                      textAlign: "center",
+                      textAlign: "center" as const,
                       padding: 40,
                       color: "#3a3530",
                     }}
@@ -496,6 +518,7 @@ const EmployeesPage = () => {
             </tbody>
           </table>
         </div>
+
         {pages > 1 && (
           <div
             style={{
@@ -583,6 +606,7 @@ const EmployeesPage = () => {
                 </div>
               </div>
             </div>
+
             <div
               style={{
                 display: "grid",
@@ -612,7 +636,7 @@ const EmployeesPage = () => {
                     style={{
                       fontSize: 10,
                       color: "#4a4540",
-                      textTransform: "uppercase",
+                      textTransform: "uppercase" as const,
                       letterSpacing: "0.1em",
                       marginBottom: 2,
                     }}

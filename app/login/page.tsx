@@ -52,15 +52,15 @@ const LoginPage = () => {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(data.user));
-        addToast("Logged in successfully", "success");
+        addToast("success", "Logged in successfully");
         router.push("/dashboard");
       } else {
         setErr(data.error || "Invalid credentials");
-        addToast(data.error || "Login failed", "error");
+        addToast("error", data.error || "Login failed");
       }
     } catch (error) {
       setErr("Network error");
-      addToast("Network error", "error");
+      addToast("error", "Network error");
     } finally {
       setLoading(false);
     }
@@ -176,7 +176,7 @@ const LoginPage = () => {
 
           <div style={{ marginTop: 16, textAlign: "center" }}>
             <span style={{ color: "#4a4540", fontSize: 12 }}>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
             </span>
             <button
               onClick={() => router.push("/signup")}

@@ -1,18 +1,43 @@
-// app/departments/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "@/app/ui/modal";
 import Input from "@/app/ui/input";
 import { S } from "@/lib/styles";
-import { useToast } from "@/app/context/toastContext";
+import { useToast } from "@/app/ui/toast";
+
+type User = {
+  id: string;
+  email: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+};
+
+type Department = {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+  budget: number;
+  departmentId?: string;
+};
+
+type Employee = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  departmentId: string;
+  status: string;
+};
 
 const DepartmentsPage = () => {
   const router = useRouter();
   const { addToast } = useToast();
-  const [user, setUser] = useState<boolean>( false);
-  const [departments, setDepartments] = useState<boolean[]>([]);
-  const [employees, setEmployees] = useState<boolean[]>([]);
+
+  const [user, setUser] = useState<User | null>(null);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [modal, setModal] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -21,15 +46,15 @@ const DepartmentsPage = () => {
     budget: "",
   });
 
-//   useEffect(() => {
-//     const stored = localStorage.getItem("user");
-//     if (!stored) {
-//       router.push("/login");
-//       return;
-//     }
-//     setUser(JSON.parse(stored));
-//     fetchData();
-//   }, []);
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (!stored) {
+      router.push("/login");
+      return;
+    }
+    setUser(JSON.parse(stored) as User);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -40,7 +65,7 @@ const DepartmentsPage = () => {
       setDepartments(await deptRes.json());
       setEmployees(await empRes.json());
     } catch (error) {
-      addToast("Failed to load data", "error");
+      addToast("error", "Failed to load data"); // ✅ type first
     }
   };
 
@@ -58,14 +83,14 @@ const DepartmentsPage = () => {
       if (res.ok) {
         const newDept = await res.json();
         setDepartments((prev) => [...prev, newDept]);
-        addToast("Department created!", "success");
+        addToast("success", "Department created!"); // ✅ type first
         setModal(false);
         setForm({ name: "", code: "", description: "", budget: "" });
       } else {
-        addToast("Failed to create", "error");
+        addToast("error", "Failed to create"); // ✅ type first
       }
     } catch (error) {
-      addToast("Network error", "error");
+      addToast("error", "Network error"); // ✅ type first
     }
   };
 
@@ -208,7 +233,7 @@ const DepartmentsPage = () => {
                     style={{
                       fontSize: 10,
                       color: "#4a4540",
-                      textTransform: "uppercase",
+                      textTransform: "uppercase" as const,
                       letterSpacing: "0.1em",
                       marginBottom: 2,
                     }}
@@ -230,7 +255,7 @@ const DepartmentsPage = () => {
                     style={{
                       fontSize: 10,
                       color: "#4a4540",
-                      textTransform: "uppercase",
+                      textTransform: "uppercase" as const,
                       letterSpacing: "0.1em",
                       marginBottom: 2,
                     }}
@@ -289,7 +314,7 @@ const DepartmentsPage = () => {
             <div style={{ marginBottom: 14 }}>
               <label style={S.label}>Description</label>
               <textarea
-                style={{ ...S.input, height: 72, resize: "vertical" }}
+                style={{ ...S.input, height: 72, resize: "vertical" as const }}
                 value={form.description}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, description: e.target.value }))
